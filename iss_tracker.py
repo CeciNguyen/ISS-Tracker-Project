@@ -12,6 +12,8 @@ response = requests.get(url)
 global data 
 data = xmltodict.parse(response.text)
 
+geocoder = Nominatim(user_agent='iss_tracker')
+
 @app.route('/', methods=['GET'])
 def dataset() -> dict:
     """
@@ -105,16 +107,53 @@ def speedofepoch(epoch:str) -> float:
 @app.route('/epochs/<string:epoch>/location', methods=['GET'])
 def isslocation(epoch:str) -> dict:
     """
+    This function returns latitude, logitude, altitude and geoposition for a specific epoch.
+     arg1 (str): epoch is the main parameter for the function and is a string. A specific epoch is being called in the command line as stated in the data set. The route retrieves the data set that is attatched to the specific epoch and uses it to then return the latitude, logitude, altitude and geoposition of the ISS at that given epoch.
+     Returns:
+     This function will return a dictionary.
     """
     global data
-    return 0
+    
+    ds_statevector = data['ndm']['oem']['body']['segment']['data']['stateVector']
+    mean_earth_radius = 6371.07103
 
-@app.route('/now', method=['GET'])
-def issnow() -> dict:
-    """
-    """
-    global data
-    return 0
+    for t in range(len(ds_statevector)):
+        if (ds_statevector[t]['EPOCH'] == str(epoch)):
+            epoch = ds_statevector[t]['EPOCH']
+            ehrs = int(epoch[9:11])
+            emins = int(epoch[12:14])
+
+            xd = float(ds_statevector[t]['X']['#text'])
+            yd = float(ds_statevector[t]['Y']['#text'])
+            zd = float(ds_statevector[t]['Z']['#text'])
+            
+            lat = math.degrees(math.atan2(zd, math.sqrt(xd**2 + yd**2)))
+            lon = math.degrees(math.atan2(yd, xd)) - ((ehrs-12)+(emins/60))*(360/24) + 32
+            if(lon < -180):
+                lon = lon + 360
+            elif(lon > 180):
+                lon = lon -360
+
+            alt = math.sqrt(xd**2 + yd**2 + zd**2) - mean_earth_radius
+
+            #geocoder = Nominatim(user_agent='iss_tracker')
+            geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
+
+            location = {
+                    "Latitude": float(lat),
+                    "Longitude": float(lon),
+                    "Altitude": float(alt),
+                    "Geoposition": str(geoloc)
+                    }
+            
+            return location
+
+#@app.route('/now', method=['GET'])
+#def issnow() -> dict:
+#    """
+#    """
+#    global data
+#    return 0
 
 @app.route('/comment', methods=['GET'])
 def commentlist() -> list:
@@ -218,15 +257,3 @@ def postdata() -> dict:
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
-
-
-
-
-
-
-
-
-
-
-
