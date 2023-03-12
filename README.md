@@ -1,4 +1,4 @@
-# Undone (The Sweater Container) - Homework 05 - Analyzing the ISS Data with Smarter Software  
+# ISS Tracker Project 
 
 ## What to Expect?
 Within the folder, you will find a python script named "iss_tracker.py". 
