@@ -6,7 +6,7 @@ RUN pip install requests
 
 RUN pip install xmltodict
 
-RUN pip install geopy
+RUN pip install geopy==2.3.0
 
 COPY iss_tracker.py /iss_tracker.py
 

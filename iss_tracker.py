@@ -3,6 +3,7 @@ from geopy.geocoders import Nominatim
 import requests 
 import xmltodict
 import math
+import time
 
 app = Flask(__name__)
 
@@ -150,7 +151,7 @@ def isslocation(epoch:str) -> dict:
                     }
             return location
 
-@app.route('/now', method=['GET'])
+@app.route('/now', methods=['GET'])
 def issnow() -> dict:
     """
     This function finds the most current Epoch and returns the location, geolocation,
@@ -180,7 +181,64 @@ def issnow() -> dict:
         if (potentialdiff < lowestdiff): 
             lowestdiff = potentialdiff 
             mostcurr_epoch = currepoch
-    return mostcurr_epoch
+
+    for e in range(len(ds_statevector)):
+        if (ds_statevector[e]['EPOCH'] == mostcurr_epoch):
+            epoch = ds_statevector[e]['EPOCH']
+            ehrs = int(epoch[9:11])
+            emins = int(epoch[12:14])
+
+            xd = float(ds_statevector[e]['X']['#text'])
+            yd = float(ds_statevector[e]['Y']['#text'])
+            zd = float(ds_statevector[e]['Z']['#text'])
+
+            lat = math.degrees(math.atan2(zd, math.sqrt(xd**2 + yd**2)))
+            lon = math.degrees(math.atan2(yd, xd)) - ((ehrs-12)+(emins/60))*(360/24) + 32
+            if(lon < -180):
+                lon = lon + 360
+            elif(lon > 180): 
+                lon = lon - 360
+            
+            alt = math.sqrt(xd**2 + yd**2 + zd**2) - mean_earth_radius
+            uni = "km"
+            
+            geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
+            if (str(geoloc) == "None"):
+                geoloc = "Over a body of water"
+
+            xs = abs(float(ds_statevector[e]['X']['#text']))
+            ys = abs(float(ds_statevector[e]['Y']['#text']))
+            zs = abs(float(ds_statevector[e]['Z']['#text']))
+
+            speed = round(math.sqrt(xs**2 + ys**2 + zs**2),3)
+            unis = "km/s"
+
+            epochinfo ={
+                    "1) Epoch information":{ 
+                        "Closest Epoch": str(mostcurr_epoch),
+                        "Seconds from now": float(lowestdiff),
+                        },
+
+                    "2) Location": {
+                        "Latitude": float(lat),
+                        "Longitude": float(lon)
+                        },
+
+                    "3) Altitude":{ 
+                        "Value":float(alt),
+                        "Units":str(uni)
+                        },
+
+                    "4) Geo Information":{
+                        "Geoposition": str(geoloc)
+                        },
+
+                    "5) Speed":{ 
+                        "Value": float(speed),
+                        "Units": str(unis)
+                        }
+                    }
+    return epochinfo
 
 @app.route('/comment', methods=['GET'])
 def commentlist() -> list:
