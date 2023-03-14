@@ -173,33 +173,61 @@ This will return a list of strings with comments of the data! It will most likel
 look like this:
 
 > [
+>
 >  "Units are in kg and m^2",
+>
 >  "MASS=460875.00",
+>
 >  "DRAG_AREA=1382.32",
+>
 >  "DRAG_COEFF=3.30",
+>
 >  "SOLAR_RAD_AREA=0.00",
+>
 > "SOLAR_RAD_COEFF=0.00",
+>
 >  "Orbits start at the ascending node epoch",
+>
 >  "ISS first asc. node: EPOCH = 2023-03-13T12:02:49.637 $ ORBIT = 2694 $ LAN(DEG) = 90.97459",
+>
 >  "ISS last asc. node : EPOCH = 2023-03-28T11:07:27.443 $ ORBIT = 2926 $ LAN(DEG) = 15.99058",
+>
 >  "Begin sequence of events",
+>
 >  "TRAJECTORY EVENT SUMMARY:",
+>
 >  null,
+>
 >  "|       EVENT        |       TIG        | ORB |   DV    |   HA    |   HP    |",
+>
 >  "|                    |       GMT        |     |   M/S   |   KM    |   KM    |",
+>
 >  "|                    |                  |     |  (F/S)  |  (NM)   |  (NM)   |",
+>
 >  "=============================================================================",
+>
 >  "SpX27 Launch          074:00:30:41.000             0.0     428.2     408.6",
+>
 >  "(0.0)   (231.2)   (220.6)",
+>
 >  null,
+>
 >  "SpX27 Docking         075:11:52:14.000             0.0     428.1     408.4",
+>
 >  "(0.0)   (231.1)   (220.5)",
+>
 >  null,
+>
 >  "68S Undocking         087:09:52:30.000             0.0     425.0     407.4",
+>
 >  "(0.0)   (229.5)   (220.0)",
+>
 >  null,
+>
 >  "=============================================================================",
+>
 >  "End sequence of events"
+>
 > ]
 
 7. If you would like to see the header dictionary, you can input:
@@ -209,8 +237,11 @@ look like this:
 You will most likely see:
 
 > {
+>
 >  "CREATION_DATE": "2023-073T02:14:56.800Z",
+>
 >  "ORIGINATOR": "JSC"
+>
 > }
 
 8. If you would like to see the meta data dictionary, you can input:
@@ -220,13 +251,21 @@ You will most likely see:
 You will most likely see something along the lines of:
 
 > {
+>
 >  "CENTER_NAME": "EARTH",
+>
 >  "OBJECT_ID": "1998-067-A",
+>
 >  "OBJECT_NAME": "ISS",
+>
 >  "REF_FRAME": "EME2000",
+>
 >  "START_TIME": "2023-072T12:00:00.000Z",
+>
 >  "STOP_TIME": "2023-087T12:00:00.000Z",
+>
 >  "TIME_SYSTEM": "UTC"
+>
 > }
 
 9. If you would like to get the location for a specific epoch, you can input:
@@ -241,10 +280,15 @@ The app route will return a dictionary that gives the altitude, geoposition, lat
 and longitude of the specific epoch.
 
 > {
+>
 >  "Altitude": 427.80942237159707,
+>
 >  "Geoposition": "Over a body of water",
+>
 >  "Latitude": -8.60388519298572,
+>
 >  "Longitude": 107.42432909697723
+>
 > }
 
 10. If you would like to see the location and speed of the most recent epoch, you
@@ -256,25 +300,45 @@ You will see the closest epoch, how far away it is from the current time, locati
 and speed!
 
 > {
+>
 >  "1) Epoch information": {
+>
 >    "Closest Epoch": "2023-073T22:40:00.000Z",
+>
 >    "Seconds from now": 26.14461374282837
+>
 >  },
+>
 >  "2) Location": {
+>
 >    "Latitude": 36.442966873224286,
+>
 >    "Longitude": 91.52686172399729
+>
 >  },
+>
 >  "3) Altitude": {
+>
 >    "Units": "km",
+>
 >    "Value": 418.4332916640178
+>
 >  },
+>
 >  "4) Geo Information": {
+>
 >    "Geoposition": "Urt Moron, Golmud City, Haixi Mongol and Tibetan Autonomous Prefecture, Qinghai, China"
+>
 >  },
+>
 >  "5) Speed": {
+>
 >    "Units": "km/s",
+>
 >    "Value": 6789.504
+>
 >  }
+>
 > }
 
 11. If you need a friendly reminder of what each app route does, you are in luck! In order to see each app route and their function, just input:
