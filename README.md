@@ -77,11 +77,17 @@ Let's say you pull all the files from the repository and you want to run the doc
 You can use the docker compile file to run services/ actions!
 
 Here are some things you can try out!
+
 ``docker-compose version``: Prints out the version information
+
 ``docker-compse config``: Validates the docker compose file
+
 ``docker-compose up``: spins up all the services
+
 ``docker-compose down``: tears down the services
+
 ``docker-compose build``: builds the images in the YAML file
+
 ``docker-compose run``: runs the container defined in the YAML file
 
 ### What are the Different Queries?
