@@ -142,6 +142,8 @@ def isslocation(epoch:str) -> dict:
 
             alt = math.sqrt(xd**2 + yd**2 + zd**2) - mean_earth_radius
             geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
+            if (str(geoloc) == "None"):
+                geoloc = "Over a body of water"
 
             location = {
                     "Latitude": float(lat),
@@ -299,8 +301,8 @@ def helpepoch() -> list:
     """
     helpstring = ["/: returns the whole data set",
             "/epochs?limit=int&offset=int: returns a modified list of Epochs with the parameters",
-            "/epochs/<epoch: returns state vectors for a specific Epoch",
-            "/epochs/<epoch>/speed: returns the speed for a specific Epoch",
+            "/epochs/<str:epoch>: returns state vectors for a specific Epoch",
+            "/epochs/<str:epoch>/speed: returns the speed for a specific Epoch",
             "/comment: returns comment list object",
             "/header: returns the header dictionary object",
             "/metadata: returns the metadata dictionary object",
