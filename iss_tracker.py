@@ -87,7 +87,8 @@ def speedofepoch(epoch:str) -> float:
      equation
      Args:
      arg1 (str): epoch is the main parameter for the function and is a string.
-     A specific epoch is being called in the command line as stated in the data set.      The route retrieves the data set that is attatched to the specific epoch.
+     A specific epoch is being called in the command line as stated in the data set.      
+     The route retrieves the data set that is attatched to the specific epoch.
      Returns:
      This function returns the speed of the epoch (string)
      """
@@ -108,9 +109,13 @@ def speedofepoch(epoch:str) -> float:
 def isslocation(epoch:str) -> dict:
     """
     This function returns latitude, logitude, altitude and geoposition for a specific epoch.
-     arg1 (str): epoch is the main parameter for the function and is a string. A specific epoch is being called in the command line as stated in the data set. The route retrieves the data set that is attatched to the specific epoch and uses it to then return the latitude, logitude, altitude and geoposition of the ISS at that given epoch.
-     Returns:
-     This function will return a dictionary.
+    Args:
+    arg1 (str): epoch is the main parameter for the function and is a string. A specific epoch 
+    is being called in the command line as stated in the data set. The route retrieves the 
+    data set that is attatched to the specific epoch and uses it to then return the latitude, 
+    logitude, altitude and geoposition of the ISS at that given epoch.
+    Returns:
+    This function will return a dictionary.
     """
     global data
     
@@ -132,11 +137,9 @@ def isslocation(epoch:str) -> dict:
             if(lon < -180):
                 lon = lon + 360
             elif(lon > 180):
-                lon = lon -360
+                lon = lon - 360
 
             alt = math.sqrt(xd**2 + yd**2 + zd**2) - mean_earth_radius
-
-            #geocoder = Nominatim(user_agent='iss_tracker')
             geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
 
             location = {
@@ -145,15 +148,39 @@ def isslocation(epoch:str) -> dict:
                     "Altitude": float(alt),
                     "Geoposition": str(geoloc)
                     }
-            
             return location
 
-#@app.route('/now', method=['GET'])
-#def issnow() -> dict:
-#    """
-#    """
-#    global data
-#    return 0
+@app.route('/now', method=['GET'])
+def issnow() -> dict:
+    """
+    This function finds the most current Epoch and returns the location, geolocation,
+    and the speed of the epoch.
+    Args: 
+    This function does not have a set parameter, but the app route can be called
+    with '/now' and the route retrieves the list object through 'GET'.
+    Returns:
+    This function returns all the information of the epoch via dictionary
+    """
+    global data
+    ds_statevector = data['ndm']['oem']['body']['segment']['data']['stateVector']
+    mean_earth_radius = 6371.07103
+    
+    lowestdiff = 100000000000000000000000
+    
+    #converting the current time
+    nowtime = time.time()
+
+    for t in range(len(ds_statevector)):
+        currepoch = ds_statevector[t]['EPOCH']
+
+        #converting current epoch time
+        epochtime = time.mktime(time.strptime(currepoch[:-5], '%Y-%jT%H:%M:%S'))
+        potentialdiff = abs(nowtime - epochtime)
+
+        if (potentialdiff < lowestdiff): 
+            lowestdiff = potentialdiff 
+            mostcurr_epoch = currepoch
+    return mostcurr_epoch
 
 @app.route('/comment', methods=['GET'])
 def commentlist() -> list:
