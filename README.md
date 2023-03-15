@@ -335,7 +335,7 @@ and speed!
 >
 >    "Units": "km/s",
 >
->    "Value": 6789.504
+>    "Value": 7.662
 >
 >  }
 >

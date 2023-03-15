@@ -208,9 +208,10 @@ def issnow() -> dict:
             if (str(geoloc) == "None"):
                 geoloc = "Over a body of water"
 
-            xs = abs(float(ds_statevector[e]['X']['#text']))
-            ys = abs(float(ds_statevector[e]['Y']['#text']))
-            zs = abs(float(ds_statevector[e]['Z']['#text']))
+            
+            xs = abs(float(ds_statevector[e]['X_DOT']['#text']))    
+            ys = abs(float(ds_statevector[e]['Y_DOT']['#text']))
+            zs = abs(float(ds_statevector[e]['Z_DOT']['#text']))
 
             speed = round(math.sqrt(xs**2 + ys**2 + zs**2),3)
             unis = "km/s"
